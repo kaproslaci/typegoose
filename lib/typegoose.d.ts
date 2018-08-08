@@ -15,6 +15,6 @@ export interface GetModelForClassOptions {
 export declare class Typegoose {
     getModelForClass<T>(t: T, { existingMongoose, schemaOptions, existingConnection }?: GetModelForClassOptions): mongoose.Model<InstanceType<this>> & this & T;
     setModelForClass<T>(t: T, { existingMongoose, schemaOptions, existingConnection }?: GetModelForClassOptions): mongoose.Model<InstanceType<this>> & this & T;
-    getSchema(name: string, schemaOptions: mongoose.SchemaOptions): mongoose.Schema;
+    getSchema(name?: string, schemaOptions?: mongoose.SchemaOptions): mongoose.Schema;
     private buildSchema;
 }
