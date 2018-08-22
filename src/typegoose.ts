@@ -19,23 +19,42 @@ export interface GetModelForClassOptions {
   existingMongoose?: mongoose.Mongoose;
   schemaOptions?: mongoose.SchemaOptions;
   existingConnection?: mongoose.Connection;
+  name?: string;
 }
 
 export class Typegoose {
-  getModelForClass<T>(t: T, { existingMongoose, schemaOptions, existingConnection }: GetModelForClassOptions = {}) {
-    const name = this.constructor.name;
-    if (!models[name]) {
-      this.setModelForClass(t, { existingMongoose, schemaOptions, existingConnection });
+  getModelForClass<T>(
+    t: T, {
+      existingMongoose,
+      schemaOptions,
+      existingConnection,
+      name,
+    }: GetModelForClassOptions = {},
+  ) {
+    const modelName = name || this.constructor.name;
+    if (!models[modelName]) {
+      this.setModelForClass(t, {
+        existingMongoose,
+        schemaOptions,
+        existingConnection,
+        name,
+      });
     }
 
-    return models[name] as ModelType<this> & T;
+    return models[modelName] as ModelType<this> & T;
   }
 
-  setModelForClass<T>(t: T, { existingMongoose, schemaOptions, existingConnection }: GetModelForClassOptions = {}) {
-    const name = this.constructor.name;
+  setModelForClass<T>(
+    t: T, {
+      existingMongoose,
+      schemaOptions,
+      existingConnection,
+      name,
+    }: GetModelForClassOptions = {}) {
+    const modelName = name || this.constructor.name;
 
     // get schema of current model
-    let sch = this.buildSchema(name, schemaOptions);
+    let sch = this.buildSchema(modelName, schemaOptions);
     // get parents class name
     let parentCtor = Object.getPrototypeOf(this.constructor.prototype).constructor;
     // iterate trough all parents
@@ -53,10 +72,10 @@ export class Typegoose {
       model = existingMongoose.model.bind(existingMongoose);
     }
 
-    models[name] = model(name, sch);
-    constructors[name] = this.constructor;
+    models[modelName] = model(modelName, sch);
+    constructors[modelName] = this.constructor;
 
-    return models[name] as ModelType<this> & T;
+    return models[modelName] as ModelType<this> & T;
   }
 
   private buildSchema(name: string, schemaOptions, sch?: mongoose.Schema) {
