@@ -42,6 +42,7 @@ export const initAsArray = (name, key) => {
 };
 
 export const getClassForDocument = (document: mongoose.Document): any => {
+  debugger;
   const modelName = (document.constructor as mongoose.Model<typeof document>).modelName;
   return constructors[modelName];
 };
