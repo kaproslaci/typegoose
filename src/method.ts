@@ -9,10 +9,10 @@ const baseMethod = (target: any, key: string, descriptor: TypedPropertyDescripto
 
   let name;
   if (methodType === 'instanceMethods') {
-    name = target.constructor.name;
+    name = target.constructor.MODEL_NAME || target.constructor.name;
   }
   if (methodType === 'staticMethods') {
-    name = target.name;
+    name = target.constructor.MODEL_NAME || target.name;
   }
 
   if (!methods[methodType][name]) {
